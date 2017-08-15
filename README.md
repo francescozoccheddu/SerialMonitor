@@ -67,6 +67,6 @@ python ./serialmonitor.py -p <i>PORT</i> -f "<b>%e </b>"
 </pre>
 > b `<BADESC>` 101 `<BADESC>` `<BADESC>` 69...
 <pre>
-python ./serialmonitor.py -p <i>PORT</i> -f "<b>ASCII: %a %a %a </b>" -f "<b>Decimal: %i %i %i</b>" -f "<b>Hexadecimal: %i %i %i </b>"
+python ./serialmonitor.py -p <i>PORT</i> -f "<b>ASCII: %a %a %a </b>" -f "<b>Decimal: %i %i %i</b>" -f "<b>Hexadecimal: %h %h %h </b>"
 </pre>
 > ASCII: a b c Decimal: 97 98 99 Hexadecimal: 61 62 63 ASCII: d e f Decimal: 100 101...
