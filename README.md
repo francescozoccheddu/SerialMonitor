@@ -12,9 +12,9 @@ Copyright (c) 2017 Francesco Zoccheddu
 
 ## Help
 ### Print help message
-Download 
+Right-click and save 
 **[serialmonitor.py](https://raw.githubusercontent.com/francescozoccheddu/SerialMonitor/master/serialmonitor.py)**
-and execute it with 
+python script and execute it with 
 **-h** or **--help**
 command line argument
 to print the usage message.
