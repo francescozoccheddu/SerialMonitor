@@ -11,10 +11,6 @@ Copyright (c) 2017 Francesco Zoccheddu
 - Easy to use
 
 ## Help
-Requires **serial** module
-<pre>
-python -m pip install pyserial
-</pre>
 ### Print help message
 Right-click and save 
 **[serialmonitor.py](https://raw.githubusercontent.com/francescozoccheddu/SerialMonitor/master/serialmonitor.py)**
