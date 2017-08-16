@@ -21,12 +21,27 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. '''
 
-import argparse
-import serial
-import signal
-import collections
-import sys
-import serial.tools.list_ports
+#Welcome
+print("Serial monitor")
+print("Copyright (c) 2017 Francesco Zoccheddu")
+
+def qt(msg):
+    return "'" + str(msg) + "'"
+
+#Imports
+try:
+    import sys
+    import argparse
+    import serial
+    import signal
+    import collections
+    import serial.tools.list_ports
+
+except ImportError as err:
+    print()
+    print("Module import error")
+    print("You may need to install " + qt(err.name) + " module")
+    raise SystemExit()
 
 class SerialStream:
     def __init__(self):
@@ -220,10 +235,6 @@ class Session:
                 s.trim(s.getIndex())
             self.sw.pop(maxInd)
         return buf
-                
-                
-def qt(msg):
-    return "'" + str(msg) + "'"
 
 def parseArgs():
     
@@ -242,12 +253,14 @@ def parseArgs():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     #Output group
-    oGroup = parser.add_argument_group("output file settings")
+    oGroup = parser.add_argument_group("output settings")
     #File
     oGroup.add_argument("-of", "--ofile", type=argparse.FileType('w'), action="append", help="output to file")
     #Char limit
     default = 65535
     oGroup.add_argument("-om", "--omax", type=checkPositive, default=default, help="output to file formatted line limit")
+    #Cursor
+    oGroup.add_argument("-ll", "--llimit", type=checkPositive, help="print a fixed number of lines (requires ANSI escape support)")
 
     #Format group
     fGroup = parser.add_argument_group("format settings")    
@@ -270,7 +283,7 @@ def parseArgs():
     #List
     clGroup = cGroup.add_mutually_exclusive_group()
     clGroup.add_argument("-l", "--list", action="store_true", help="list available ports")
-    clGroup.add_argument("-le", "--listex", action="store_true", help="list available ports and their description") 
+    clGroup.add_argument("-le", "--listex", action="store_true", help="list available ports and print descriptions") 
     #Port
     cGroup.add_argument("-p", "--port", type=str, help="port to connect to")
     #Baud rate
@@ -301,8 +314,6 @@ def parseArgs():
     return parser.parse_args()
 
 def main():
-    print("Serial monitor")
-    print("Copyright (c) 2017 Francesco Zoccheddu")
     args = parseArgs()
 
     if args.flist:
@@ -348,7 +359,14 @@ def main():
 
             if sw is not None:
                 session = Session(sw, args.escape, args.byteorder, args.format, args.fbuffer)
-                history = collections.deque([], maxlen=args.omax) if args.ofile is not None else None
+
+                if args.ofile is not None:
+                    history = collections.deque([], maxlen=args.omax)
+
+                if args.llimit is not None:
+                    sys.stdout.write('\033[s')
+                    sys.stdout.flush()                                                    
+                    lastl = []
 
                 try:
                     running = True
@@ -359,19 +377,27 @@ def main():
                             running = False
                         else:
                             print()
-                            print("Aborted by keyboard")
-                            sys.exit(0)
-                        return
+                            raise SystemExit("Aborted by keyboard")
                     
                     signal.signal(signal.SIGINT, quitSignal)
                     signal.signal(signal.SIGTERM, quitSignal)
 
                     while running:
                         line = session.read()
-                        if history is not None:
+                        if args.ofile is not None:
                             history.extend(line)
-                        sys.stdout.write(line)
-                        sys.stdout.flush()
+                        if args.llimit is not None:
+                            lastl += [line]
+                            if len(lastl) >= args.llimit:
+                                sys.stdout.write('\033[u')
+                                sys.stdout.flush()                                
+                                for l in lastl:
+                                    sys.stdout.write(l)
+                                sys.stdout.flush()                                
+                                lastl = []
+                        else:
+                            sys.stdout.write(line)
+                            sys.stdout.flush()
                 
                 except serial.SerialException as err:
                     print()
