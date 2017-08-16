@@ -118,19 +118,19 @@ class Session:
 
         handlers += [HexByteEscapeHandler("h", "print next byte as hexadecimal string")]
 
-        #Integer byte
-        class IntegerByteEscapeHandler(EscapeHandler):
+        #Decimal byte
+        class DecimalByteEscapeHandler(EscapeHandler):
             def process(self, stream, session):
                 return str(session.byteToInt(stream.read(session.sw)))
 
-        handlers += [IntegerByteEscapeHandler("i", "print next byte as decimal integer")]
+        handlers += [DecimalByteEscapeHandler("d", "print next byte as decimal integer")]
 
-        #Integer word
-        class IntegerWordEscapeHandler(EscapeHandler):
+        #Decimal word
+        class DecimalWordEscapeHandler(EscapeHandler):
             def process(self, stream, session):
                 return str((session.byteToInt(stream.read(session.sw)) << 8) | session.byteToInt(stream.read(session.sw)))
 
-        handlers += [IntegerWordEscapeHandler("d", "print next word as decimal integer")]
+        handlers += [DecimalWordEscapeHandler("w", "print next word as decimal integer")]
 
         #Ascii byte
         class AsciiByteEscapeHandler(EscapeHandler):
