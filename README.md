@@ -36,7 +36,7 @@ print decimal output to console
 and save it to 
 *output.txt* and *outputCopy.txt* files
 <pre>
-python ./serialmonitor.py -p COM3 -f "%i" -of output.txt -of outputCopy.txt
+python ./serialmonitor.py -p COM3 -f "%d" -of output.txt -of outputCopy.txt
 </pre>
 ### Formatting examples
 Format the alphabet
@@ -51,13 +51,13 @@ python ./serialmonitor.py -p <i>PORT</i> -f "<b>Character '%a' read%n</b>"
 Character 'b' read<br>
 Character 'c' read...
 <pre>
-python ./serialmonitor.py -p <i>PORT</i> -f "<b>%i %a </b>"
+python ./serialmonitor.py -p <i>PORT</i> -f "<b>%d %a </b>"
 </pre>
 > 97 b 99 d 101 e 203 g...
 <pre>
-python ./serialmonitor.py -p <i>PORT</i> -f "<b>Bin byte: %b Hex byte: %h Int byte: %i Int word: %d </b>"
+python ./serialmonitor.py -p <i>PORT</i> -f "<b>Bin byte: %b Hex byte: %h Dec byte: %d Dec word: %w </b>"
 </pre>
-> Bin byte: 1100001 Hex byte: 62 Int byte: 99 Int word: 25701 Bin byte: 1100110...
+> Bin byte: 1100001 Hex byte: 62 Dec byte: 99 Dec word: 25701 Bin byte: 1100110...
 <pre>
 python ./serialmonitor.py -p <i>PORT</i> -f "<b>%a%x</b>"
 </pre>
@@ -67,6 +67,6 @@ python ./serialmonitor.py -p <i>PORT</i> -f "<b>%e </b>"
 </pre>
 > b `<BADESC>` 101 `<BADESC>` `<BADESC>` 69...
 <pre>
-python ./serialmonitor.py -p <i>PORT</i> -f "<b>ASCII: %a %a %a </b>" -f "<b>Decimal: %i %i %i</b>" -f "<b>Hexadecimal: %h %h %h </b>"
+python ./serialmonitor.py -p <i>PORT</i> -f "<b>ASCII: %a %a %a </b>" -f "<b>Decimal: %d %d %d</b>" -f "<b>Hexadecimal: %h %h %h </b>"
 </pre>
 > ASCII: a b c Decimal: 97 98 99 Hexadecimal: 61 62 63 ASCII: d e f Decimal: 100 101...
